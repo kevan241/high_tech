@@ -5,7 +5,7 @@ export async function POST(request: Request) {
 
     const [products, categories, marques] = await Promise.all([
         prisma.product.findMany({ 
-            include: { categorie: true, marque: true },
+            include: { categories: { include: { categorie: true } }, marque: true },
             where: { quantity: { gt: 0 } }
         }),
         prisma.categorie.findMany(),
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     ])
 
     const productList = products.map(p =>
-        `- ID:${p.id} | ${p.name} | ${p.marque?.name || 'N/A'} | ${p.categorie?.name || 'N/A'} | Prix: ${p.price.toLocaleString()} Fcfa${p.promoActive && p.pricePromo ? ` (PROMO: ${p.pricePromo.toLocaleString()} Fcfa)` : ''} | IMAGE_URL:${p.imageUrl || ''}`
+        `- ID:${p.id} | ${p.name} | ${p.marque?.name || 'N/A'} | ${p.categories?.map((c: any) => c.categorie?.name).join(', ') || 'N/A'} | Prix: ${p.price.toLocaleString()} Fcfa${p.promoActive && p.pricePromo ? ` (PROMO: ${p.pricePromo.toLocaleString()} Fcfa)` : ''} | IMAGE_URL:${p.imageUrl || ''}`
     ).join('\n')
 
     const context = `Tu es l'assistant virtuel de High Tech 241, une boutique tech au Gabon.
