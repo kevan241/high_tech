@@ -199,12 +199,14 @@ export default function AIAgent() {
             {/* Fenêtre de chat */}
             {open && (
                 <Box sx={{
-                    position: 'fixed', bottom: 30, right: 30, zIndex: 1000,
-                    width: 380, height: 520,
-                    backgroundColor: '#fff', borderRadius: '16px',
-                    boxShadow: '0px 8px 40px rgba(0,0,0,0.2)',
-                    display: 'flex', flexDirection: 'column', overflow: 'hidden'
-                }}>
+    position: 'fixed', bottom: 0, right: 0, zIndex: 1000,
+    width: { xs: '100vw', md: 380 },
+    height: { xs: '70vh', md: 520 },
+    borderRadius: { xs: '16px 16px 0 0', md: '16px' },
+    backgroundColor: '#fff',
+    boxShadow: '0px 8px 40px rgba(0,0,0,0.2)',
+    display: 'flex', flexDirection: 'column', overflow: 'hidden'
+}}>
                     <Box sx={{ backgroundColor: '#0F3D1F', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <SmartToy sx={{ color: '#fff', fontSize: 20 }} />
