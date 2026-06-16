@@ -1,0 +1,192 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+enum OrderStatus {
+  EN_ATTENTE
+  EXPEDIEE
+  LIVREE
+  ANNULEE
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Categorie {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  sections CategorySection[]
+  sections2 CategorySection2[]
+  productCategories ProductCategorie[]
+}
+
+model Marque {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  products Product[]
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  phone     String
+  role      Role       @default(USER)
+  password  String
+  avatar    String?
+  address     String?
+  city        String?
+  country     String?
+  postalCode  String?
+  orders    Order[]
+  posts     Post[]
+  cartItems CartItem[]
+}
+
+model Product {
+  id              String     @id @default(uuid())
+  name            String
+  description     String?
+  fiche_technique String
+  imageUrl        String
+  price           Float
+  quantity        Int
+  pricePromo      Float?
+  promoActive     Boolean    @default(false)
+  marqueId        String?
+  marque          Marque?    @relation(fields: [marqueId], references: [id])
+  orders          Order[]
+  posts           Post[]
+  cartItems       CartItem[]
+  categories      ProductCategorie[]
+}
+
+model StorePage {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  filters   Json     @default("{}")
+  createdAt DateTime @default(now())
+}
+
+model StockAlertConfig {
+  id        String @id @default(uuid())
+  threshold Int    @default(5)
+  email     String
+}
+
+model Post {
+  id        String  @id @default(uuid())
+  title     String
+  content   String
+  rating    Int
+  userId    String
+  productId String
+  user      User    @relation(fields: [userId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  userId    String
+  productId String
+  quantity  Int
+  total     Float
+  status    OrderStatus @default(EN_ATTENTE)
+  photoUrl  String?
+  createdAt DateTime    @default(now())
+  user      User        @relation(fields: [userId], references: [id])
+  product   Product     @relation(fields: [productId], references: [id])
+}
+
+model HeroBlock {
+  id          String  @id @default(cuid())
+  slot        Int     @unique
+  imageUrl    String  @default("")
+  title       String  @default("")
+  description String  @default("")
+  buttonText  String  @default("")
+  buttonLink  String  @default("")
+}
+
+model BannerBlock {
+  id         String  @id @default(cuid())
+  slot       Int     @unique
+  imageUrl   String  @default("")
+  title      String  @default("")
+  buttonText String  @default("")
+  buttonLink String  @default("")
+}
+
+model PubBlock {
+  id       String @id @default(cuid())
+  page     String @default("home") @unique
+  imageUrl String @default("")
+  linkUrl  String @default("")
+}
+
+model BonPlanBlock {
+  id          String   @id @default(cuid())
+  slot        Int      @unique
+  imageUrl    String?
+  title       String?
+  buttonText  String?
+  buttonLink  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model CategorySection {
+  id          String    @id @default(cuid())
+  categorieId String
+  ordre       Int
+  limit       Int       @default(4)
+  categorie   Categorie @relation(fields: [categorieId], references: [id], onDelete: Cascade)
+}
+
+model CategorySection2 {
+  id          String    @id @default(cuid())
+  categorieId String
+  ordre       Int
+  limit       Int       @default(4)
+  categorie   Categorie @relation(fields: [categorieId], references: [id], onDelete: Cascade)
+}
+
+model CartItem {
+  id          String   @id @default(uuid())
+  userId      String
+  productId   String
+  quantity    Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+model ProductCategorie {
+  id          String    @id @default(cuid())
+  productId   String
+  categorieId String
+  visible     Boolean   @default(true)
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  categorie   Categorie @relation(fields: [categorieId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, categorieId])
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}

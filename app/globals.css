@@ -1,3 +1,23 @@
+.mui-s92abg{
+  overflow: hidden;
+}
+
+.product_grid_scroll {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.body_products {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+}
+
+.product_image:hover{
+  cursor: pointer;
+}
+
 @import "tailwindcss";
 
 :root {
@@ -20,7 +40,107 @@
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, #0f3d1fad, #ffff),
+              linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
+  background-size: auto, 30px 30px, 30px 30px;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.admin_menu_title{
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.admin_menu_title::after{
+  position:absolute;
+  top: 12px;
+  left:0;
+  content: '';
+  width: 100%;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.174);
+  padding: 15px;
+}
+
+/* ============ RESPONSIVE MOBILE ============ */
+@media (max-width: 768px) {
+  /* HERO */
+  .hero-grid { grid-template-columns: 1fr !important; height: auto !important; }
+  .hero-main { height: 260px !important; padding: 0 24px !important; }
+  .hero-side { display: flex !important; flex-direction: row !important; height: 160px !important; }
+  .hero-side > div { padding: 16px !important; }
+
+  /* BANNIÈRES */
+  .banners-grid { grid-template-columns: 1fr !important; padding: 16px !important; gap: 10px !important; }
+
+  /* PRODUITS */
+  .products-layout { grid-template-columns: 1fr !important; }
+  .sidebar-filters { display: none !important; }
+  .mobile-filter-btn { display: block !important; }
+  .products-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+  .products-padding { padding: 16px !important; }
+
+  /* BONS PLANS */
+  .bonplans-grid { grid-template-columns: 1fr !important; }
+  .bonplans-subgrid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* SECTIONS CATÉGORIES */
+  .category-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+}
+
+@media (max-width: 414px) {
+  /* HERO */
+  .hero-main { 
+    height: 200px !important; 
+    padding: 0 16px !important; 
+  }
+  .hero-main h2 { 
+    font-size: 18px !important; 
+  }
+  .hero-main p { 
+    font-size: 11px !important; 
+    display: none !important;
+  }
+  .hero-main button { 
+    font-size: 11px !important; 
+    padding: 8px 16px !important; 
+  }
+  .hero-side { 
+    height: 120px !important; 
+  }
+  .hero-side > div h3 { 
+    font-size: 11px !important; 
+  }
+  .hero-side > div button { 
+    font-size: 9px !important; 
+    padding: 4px 8px !important; 
+  }
+
+  /* BANNIÈRES */
+  .banners-grid { 
+    padding: 12px !important; 
+    gap: 8px !important; 
+  }
+
+  /* PRODUITS */
+  .products-grid { 
+    grid-template-columns: repeat(2, 1fr) !important; 
+    gap: 8px !important; 
+  }
+  .products-padding { 
+    padding: 12px !important; 
+  }
+
+  /* BONS PLANS */
+  .bonplans-subgrid { 
+    grid-template-columns: repeat(2, 1fr) !important; 
+    gap: 8px !important; 
+  }
+
+  /* CATÉGORIES */
+  .category-grid { 
+    grid-template-columns: repeat(2, 1fr) !important; 
+    gap: 8px !important; 
+  }
 }
