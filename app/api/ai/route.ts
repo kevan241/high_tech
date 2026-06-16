@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     const { message, history } = await request.json()
 
     const [products, orders, categories, marques] = await Promise.all([
-        prisma.product.findMany({ include: { categorie: true, marque: true } }),
+        prisma.product.findMany({ include: { categories: { include: { categorie: true } }, marque: true } }),
         prisma.order.findMany({ include: { user: true, product: true } }),
         prisma.categorie.findMany(),
         prisma.marque.findMany()
