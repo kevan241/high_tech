@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const context = `Tu es un assistant IA pour l'interface d'administration de High Tech 241, un site e-commerce de produits tech au Gabon.
 Tu aides l'administrateur à gérer le site.
 Données actuelles du site :
-- Produits (${products.length}) : ${JSON.stringify(products.map(p => ({ id: p.id, name: p.name, price: p.price, quantity: p.quantity, promo: p.promoActive, pricePromo: p.pricePromo, categorie: p.categorie?.name, marque: p.marque?.name })))}
+- Produits (${products.length}) : ${JSON.stringify(products.map(p => ({ id: p.id, name: p.name, price: p.price, quantity: p.quantity, promo: p.promoActive, pricePromo: p.pricePromo, categories: p.categories?.map((c: any) => c.categorie?.name).join(', '), marque: p.marque?.name })))}
 - Commandes (${orders.length}) : ${JSON.stringify(orders.map(o => ({ id: o.id, status: o.status, total: o.total, product: o.product?.name, user: o.user?.name })))}
 - Catégories : ${categories.map(c => c.name).join(', ')}
 - Marques : ${marques.map(m => m.name).join(', ')}
