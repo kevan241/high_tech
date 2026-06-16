@@ -172,6 +172,26 @@ export default function FrontendHome() {
 
     return (
         <div style={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
+            {/* SEARCH BAR MOBILE - sous navbar */}
+<div style={{ display: 'none', padding: '10px 16px', backgroundColor: '#f0f0f0', gap: '8px', alignItems: 'center' }} className="mobile-search-bar">
+    <input
+        type="text"
+        placeholder="Rechercher votre produit..."
+        onKeyDown={(e) => {
+            if (e.key === 'Enter' && (e.target as HTMLInputElement).value.trim()) {
+                window.location.href = `/frontend/products?search=${(e.target as HTMLInputElement).value}`
+            }
+        }}
+        style={{ flex: 1, padding: '10px 16px', borderRadius: '8px 0 0 8px', border: 'none', fontSize: '13px', backgroundColor: '#fff', outline: 'none' }}
+    />
+<button
+    onClick={() => setFiltersOpen(true)}
+    style={{ backgroundColor: '#168039', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '0 8px 8px 0', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap' }}
+>
+    Catégories
+</button>
+</div>
+
 
            {/* HERO */}
 <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', height: '420px' }}>
@@ -292,13 +312,7 @@ export default function FrontendHome() {
                 {/* GRILLE */}
                 <div className="products-padding" style={{ padding: '40px' }}>
 
-                    {/* Bouton filtres mobile */}
-                    <div className="mobile-filter-btn" style={{ display: 'none', marginBottom: '16px' }}>
-                        <button onClick={() => setFiltersOpen(true)}
-                            style={{ backgroundColor: '#0F3D1F', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' }}>
-                            🔧 Filtres {(selectedCategories.length + selectedMarques.length) > 0 ? `(${selectedCategories.length + selectedMarques.length})` : ''}
-                        </button>
-                    </div>
+
 
                     <h2 style={{ color: '#0F3D1F', fontSize: '22px', fontWeight: 'bold', marginBottom: '24px' }}>
                         Explorez nos produits <span style={{ fontSize: '14px', color: '#999', fontWeight: 'normal' }}>({filtered.length} produits)</span>

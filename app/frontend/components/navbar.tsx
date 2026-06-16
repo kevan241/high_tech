@@ -166,35 +166,7 @@ export default function Navbar() {
                     </IconButton>
                 </Box>
 
-                {/* Search in drawer */}
-                <Box sx={{ px: 2, pb: 2 }}>
-                    <TextField
-                        placeholder="Rechercher un produit..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        onKeyDown={(e) => { handleSearch(e); setDrawerOpen(false) }}
-                        size="small"
-                        fullWidth
-                        sx={{
-                            '& .MuiOutlinedInput-root': {
-                                backgroundColor: '#fff',
-                                borderRadius: '8px',
-                                fontSize: '13px',
-                                '& fieldset': { border: 'none' }
-                            }
-                        }}
-                        slotProps={{
-                            input: {
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <Search sx={{ color: '#0F3D1F', cursor: 'pointer' }}
-                                            onClick={() => { if (search.trim()) { router.push(`/frontend/products?search=${search}`); setDrawerOpen(false) } }} />
-                                    </InputAdornment>
-                                )
-                            }
-                        }}
-                    />
-                </Box>
+            
 
                 <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)' }} />
 

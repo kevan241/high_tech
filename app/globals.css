@@ -144,3 +144,15 @@ body {
     gap: 8px !important; 
   }
 }
+
+@media (max-width: 768px) {
+  .mobile-search-bar {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 414px) {
+  .mobile-search-bar {
+    display: flex !important;
+  }
+}
