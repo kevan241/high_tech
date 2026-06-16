@@ -201,7 +201,7 @@ export default function AIAgent() {
                 <Box sx={{
     position: 'fixed', bottom: 0, right: 0, zIndex: 1000,
     width: { xs: '100vw', md: 380 },
-    height: { xs: '70vh', md: 520 },
+    height: { xs: '50vh', md: 520 },
     borderRadius: { xs: '16px 16px 0 0', md: '16px' },
     backgroundColor: '#fff',
     boxShadow: '0px 8px 40px rgba(0,0,0,0.2)',
@@ -268,17 +268,17 @@ export default function AIAgent() {
                     </Box>
 
                     <Box sx={{ padding: '12px 16px', borderTop: '1px solid #e0e0e0', display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        <TextField
-                            placeholder="Posez votre question..."
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-                            size="small"
-                            fullWidth
-                            multiline
-                            maxRows={3}
-                            sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px', fontSize: '13px' } }}
-                        />
+                       <TextField
+    placeholder="Posez votre question..."
+    value={message}
+    onChange={(e) => setMessage(e.target.value)}
+    onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
+    size="small"
+    fullWidth
+    multiline
+    maxRows={3}
+    sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px', fontSize: '16px' } }}  // ← ici
+/>
                         <IconButton onClick={handleSend} disabled={loading || !message.trim()}
                             sx={{ backgroundColor: '#0F3D1F', color: '#fff', '&:hover': { backgroundColor: '#0a2a14' }, '&:disabled': { backgroundColor: '#ccc' }, borderRadius: '10px' }}>
                             <Send fontSize="small" />
