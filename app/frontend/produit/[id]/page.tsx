@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { Box, CircularProgress, TextField, Rating } from '@mui/material'
-import { ShoppingCart, Bookmark, Star, ChevronLeft, ChevronRight } from '@mui/icons-material'
+import { ShoppingCart, Star, ChevronLeft, ChevronRight } from '@mui/icons-material'
 
 type Product = {
     id: string
@@ -42,14 +42,12 @@ export default function ProductPage() {
     const [activeTab, setActiveTab] = useState<'description' | 'fiche'>('description')
     const [qty, setQty] = useState(1)
 
-    // Review form
     const [reviewTitle, setReviewTitle] = useState('')
     const [reviewContent, setReviewContent] = useState('')
     const [reviewRating, setReviewRating] = useState<number | null>(5)
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
 
-    // Carousel indexes
     const [simIdx, setSimIdx] = useState(0)
     const [sugIdx, setSugIdx] = useState(0)
 
@@ -62,7 +60,6 @@ export default function ProductPage() {
         ]).then(([prod, postData]) => {
             setProduct(prod)
             setPosts(Array.isArray(postData) ? postData : [])
-            // Fetch similar & suggested
             fetch('/api/products').then(r => r.json()).then((all: Product[]) => {
                 const others = all.filter(p => p.id !== prod.id)
                 setSimilar(others.filter(p => p.categorieId === prod.categorieId).slice(0, 8))
@@ -104,13 +101,11 @@ export default function ProductPage() {
         <Box sx={{ textAlign: 'center', padding: '60px', color: '#666' }}>Produit introuvable.</Box>
     )
 
-    const displayPrice = product.promoActive && product.pricePromo ? product.pricePromo : product.price
-
     return (
         <Box sx={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
             {/* Breadcrumb */}
-            <Box sx={{ backgroundColor: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 40px' }}>
-                <Box sx={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#888' }}>
+            <Box sx={{ backgroundColor: '#fff', borderBottom: '1px solid #e8e8e8', padding: { xs: '10px 16px', md: '12px 40px' } }}>
+                <Box sx={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#888', flexWrap: 'wrap' }}>
                     <span style={{ cursor: 'pointer', color: '#0F3D1F' }} onClick={() => router.push('/frontend')}>Accueil</span>
                     <span>›</span>
                     {product.categorie && <><span style={{ cursor: 'pointer', color: '#0F3D1F' }}>{product.categorie.name}</span><span>›</span></>}
@@ -118,19 +113,26 @@ export default function ProductPage() {
                 </Box>
             </Box>
 
-            {/* Main product section */}
-            <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: '32px 40px' }}>
-                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 300px', gap: '40px', backgroundColor: '#fff', borderRadius: '16px', padding: '32px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+            <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: { xs: '16px', md: '32px 40px' } }}>
 
+                {/* Main product section */}
+                <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 300px' },
+                    gap: { xs: '20px', md: '40px' },
+                    backgroundColor: '#fff',
+                    borderRadius: '16px',
+                    padding: { xs: '16px', md: '32px' },
+                    boxShadow: '0 2px 16px rgba(0,0,0,0.06)'
+                }}>
                     {/* Image */}
                     <Box>
-                        <Box sx={{ border: '1px solid #e8e8e8', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 320 }}>
+                        <Box sx={{ border: '1px solid #e8e8e8', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', height: { xs: 240, md: 320 } }}>
                             <img src={product.imageUrl} alt={product.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                         </Box>
-                        {/* Thumbnails placeholder */}
                         <Box sx={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
                             {[1, 2, 3].map(i => (
-                                <Box key={i} sx={{ width: 64, height: 64, border: i === 1 ? '2px solid #0F3D1F' : '1px solid #e8e8e8', borderRadius: '8px', overflow: 'hidden', cursor: 'pointer', backgroundColor: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Box key={i} sx={{ width: 56, height: 56, border: i === 1 ? '2px solid #0F3D1F' : '1px solid #e8e8e8', borderRadius: '8px', overflow: 'hidden', cursor: 'pointer', backgroundColor: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <img src={product.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                 </Box>
                             ))}
@@ -140,9 +142,8 @@ export default function ProductPage() {
                     {/* Info */}
                     <Box>
                         {product.marque && <Box sx={{ fontSize: '12px', fontWeight: 700, color: '#0F3D1F', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>{product.marque.name}</Box>}
-                        <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#1a1a1a', margin: '0 0 12px' }}>{product.name}</h1>
+                        <h1 style={{ fontSize: '20px', fontWeight: 700, color: '#1a1a1a', margin: '0 0 12px' }}>{product.name}</h1>
 
-                        {/* Rating summary */}
                         {posts.length > 0 && (
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
                                 <Rating value={avgRating} precision={0.5} readOnly size="small" sx={{ color: '#0F3D1F' }} />
@@ -150,7 +151,6 @@ export default function ProductPage() {
                             </Box>
                         )}
 
-                        {/* Tabs */}
                         <Box sx={{ display: 'flex', borderBottom: '2px solid #e8e8e8', marginBottom: '16px' }}>
                             {(['description', 'fiche'] as const).map(tab => (
                                 <Box key={tab} onClick={() => setActiveTab(tab)} sx={{ padding: '8px 16px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', borderBottom: activeTab === tab ? '2px solid #0F3D1F' : '2px solid transparent', marginBottom: '-2px', color: activeTab === tab ? '#0F3D1F' : '#888', transition: 'all 0.2s' }}>
@@ -163,9 +163,8 @@ export default function ProductPage() {
                         </Box>
                     </Box>
 
-                    {/* Buy box */}
+                    {/* Buy box - sur mobile il passe en dessous */}
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {/* Price */}
                         <Box sx={{ backgroundColor: '#f0f7f2', borderRadius: '12px', padding: '20px', textAlign: 'center' }}>
                             {product.promoActive && product.pricePromo ? (
                                 <>
@@ -180,7 +179,6 @@ export default function ProductPage() {
                             )}
                         </Box>
 
-                        {/* Stock */}
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
                             <Box sx={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: product.quantity > 0 ? '#22c55e' : '#ef4444' }} />
                             <span style={{ color: product.quantity > 0 ? '#22c55e' : '#ef4444', fontWeight: 600 }}>
@@ -188,22 +186,19 @@ export default function ProductPage() {
                             </span>
                         </Box>
 
-                        {/* Qty */}
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                             <span style={{ fontSize: '13px', color: '#666' }}>Quantité</span>
-                            <Box sx={{ display: 'flex', alignItems: 'center',color:"black", border: '1px solid #e0e0e0', borderRadius: '8px', overflow: 'hidden' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', color: 'black', border: '1px solid #e0e0e0', borderRadius: '8px', overflow: 'hidden' }}>
                                 <Box onClick={() => setQty(q => Math.max(1, q - 1))} sx={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backgroundColor: '#f5f5f5', fontSize: '16px', fontWeight: 700, '&:hover': { backgroundColor: '#e0e0e0' } }}>−</Box>
                                 <Box sx={{ width: 40, textAlign: 'center', fontSize: '14px', fontWeight: 600 }}>{qty}</Box>
                                 <Box onClick={() => setQty(q => Math.min(product.quantity, q + 1))} sx={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backgroundColor: '#f5f5f5', fontSize: '16px', fontWeight: 700, '&:hover': { backgroundColor: '#e0e0e0' } }}>+</Box>
                             </Box>
                         </Box>
 
-                        {/* Buttons */}
                         <Box onClick={() => {}} sx={{ backgroundColor: '#0F3D1F', color: '#fff', padding: '13px', borderRadius: '10px', textAlign: 'center', fontWeight: 700, fontSize: '14px', cursor: product.quantity > 0 ? 'pointer' : 'not-allowed', opacity: product.quantity > 0 ? 1 : 0.5, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'background 0.2s', '&:hover': { backgroundColor: product.quantity > 0 ? '#0a2a14' : '#0F3D1F' } }}>
                             <ShoppingCart fontSize="small" /> Effectuer un paiement
                         </Box>
 
-                        {/* Livraison info */}
                         <Box sx={{ backgroundColor: '#fafafa', borderRadius: '10px', padding: '14px', fontSize: '12px', color: '#666', lineHeight: 1.8 }}>
                             Livraison disponible<br />
                             Retrait en magasin possible<br />
@@ -212,47 +207,51 @@ export default function ProductPage() {
                     </Box>
                 </Box>
 
-                {/* Similar products */}
+                {/* Carousels - scroll horizontal sur mobile */}
                 {similar.length > 0 && (
                     <Box sx={{ marginTop: '40px' }}>
-                        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#1a1a1a', marginBottom: '20px' }}>Articles similaires</h2>
-                        <Box sx={{ position: 'relative' }}>
+                        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#1a1a1a', marginBottom: '16px' }}>Articles similaires</h2>
+                        <Box sx={{ display: { xs: 'flex', md: 'none' }, overflowX: 'auto', gap: '12px', pb: 1, scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
+                            {similar.map(p => <Box key={p.id} sx={{ minWidth: 160, flexShrink: 0 }}><ProductCard product={p} onClick={() => router.push(`/frontend/produit/${p.id}`)} /></Box>)}
+                        </Box>
+                        <Box sx={{ display: { xs: 'none', md: 'block' }, position: 'relative' }}>
                             {simIdx > 0 && <Box onClick={() => setSimIdx(i => Math.max(0, i - 4))} sx={arrowStyle('left')}><ChevronLeft /></Box>}
-                            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', overflow: 'hidden' }}>
-                                {similar.slice(simIdx, simIdx + 5).map(p => <ProductCard key={p.id} product={p} onClick={() => router.push(`/frontend/produit/${p.id}`)} />)}
+                            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+                                {similar.slice(simIdx, simIdx + 4).map(p => <ProductCard key={p.id} product={p} onClick={() => router.push(`/frontend/produit/${p.id}`)} />)}
                             </Box>
-                            {simIdx + 5 < similar.length && <Box onClick={() => setSimIdx(i => i + 4)} sx={arrowStyle('right')}><ChevronRight /></Box>}
+                            {simIdx + 4 < similar.length && <Box onClick={() => setSimIdx(i => i + 4)} sx={arrowStyle('right')}><ChevronRight /></Box>}
                         </Box>
                     </Box>
                 )}
 
-                {/* Suggested products */}
                 {suggested.length > 0 && (
                     <Box sx={{ marginTop: '40px' }}>
-                        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#1a1a1a', marginBottom: '20px' }}>Articles qui pourraient vous intéresser</h2>
-                        <Box sx={{ position: 'relative' }}>
+                        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#1a1a1a', marginBottom: '16px' }}>Articles qui pourraient vous intéresser</h2>
+                        <Box sx={{ display: { xs: 'flex', md: 'none' }, overflowX: 'auto', gap: '12px', pb: 1, scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
+                            {suggested.map(p => <Box key={p.id} sx={{ minWidth: 160, flexShrink: 0 }}><ProductCard product={p} onClick={() => router.push(`/frontend/produit/${p.id}`)} /></Box>)}
+                        </Box>
+                        <Box sx={{ display: { xs: 'none', md: 'block' }, position: 'relative' }}>
                             {sugIdx > 0 && <Box onClick={() => setSugIdx(i => Math.max(0, i - 4))} sx={arrowStyle('left')}><ChevronLeft /></Box>}
-                            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px' }}>
+                            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
                                 {suggested.slice(sugIdx, sugIdx + 4).map(p => <ProductCard key={p.id} product={p} onClick={() => router.push(`/frontend/produit/${p.id}`)} />)}
                             </Box>
-                            {sugIdx + 5 < suggested.length && <Box onClick={() => setSugIdx(i => i + 4)} sx={arrowStyle('right')}><ChevronRight /></Box>}
+                            {sugIdx + 4 < suggested.length && <Box onClick={() => setSugIdx(i => i + 4)} sx={arrowStyle('right')}><ChevronRight /></Box>}
                         </Box>
                     </Box>
                 )}
 
                 {/* Reviews */}
-                <Box sx={{ marginTop: '40px', backgroundColor: '#fff', borderRadius: '16px', padding: '32px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+                <Box sx={{ marginTop: '40px', backgroundColor: '#fff', borderRadius: '16px', padding: { xs: '16px', md: '32px' }, boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
                     <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#1a1a1a', marginBottom: '24px' }}>Retours utilisateurs</h2>
 
-                    {/* Existing reviews */}
                     {posts.length === 0 ? (
                         <Box sx={{ color: '#aaa', fontSize: '14px', marginBottom: '32px' }}>Aucun avis pour l'instant. Soyez le premier !</Box>
                     ) : (
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
                             {posts.map(post => (
-                                <Box key={post.id} sx={{ border: '1px solid #e8e8e8', borderRadius: '12px', padding: '16px 20px' }}>
+                                <Box key={post.id} sx={{ border: '1px solid #e8e8e8', borderRadius: '12px', padding: '16px' }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                                        <Box sx={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: '#0F3D1F', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700 }}>
+                                        <Box sx={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: '#0F3D1F', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, flexShrink: 0 }}>
                                             {post.user.name.charAt(0).toUpperCase()}
                                         </Box>
                                         <Box>
@@ -267,17 +266,16 @@ export default function ProductPage() {
                         </Box>
                     )}
 
-                    {/* Review form */}
                     {session ? (
                         <Box sx={{ borderTop: '1px solid #e8e8e8', paddingTop: '24px' }}>
                             <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#1a1a1a', margin: '0 0 16px' }}>Laisser un avis</h3>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: 500 }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: { xs: '100%', md: 500 } }}>
                                 <Box>
                                     <Box sx={{ fontSize: '13px', color: '#666', marginBottom: '6px' }}>Note</Box>
                                     <Rating value={reviewRating} onChange={(_, v) => setReviewRating(v)} sx={{ color: '#0F3D1F' }} />
                                 </Box>
-                                <TextField label="Titre" value={reviewTitle} onChange={e => setReviewTitle(e.target.value)} size="small" fullWidth />
-                                <TextField label="Votre avis" value={reviewContent} onChange={e => setReviewContent(e.target.value)} size="small" fullWidth multiline rows={3} />
+                                <TextField label="Titre" value={reviewTitle} onChange={e => setReviewTitle(e.target.value)} size="small" fullWidth sx={{ '& .MuiOutlinedInput-root': { fontSize: '16px' } }} />
+                                <TextField label="Votre avis" value={reviewContent} onChange={e => setReviewContent(e.target.value)} size="small" fullWidth multiline rows={3} sx={{ '& .MuiOutlinedInput-root': { fontSize: '16px' } }} />
                                 <Box onClick={handleReviewSubmit} sx={{ backgroundColor: submitted ? '#22c55e' : '#0F3D1F', color: '#fff', padding: '11px 24px', borderRadius: '10px', fontWeight: 700, fontSize: '14px', cursor: submitting ? 'not-allowed' : 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', width: 'fit-content', transition: 'background 0.2s' }}>
                                     {submitting ? <CircularProgress size={16} sx={{ color: '#fff' }} /> : submitted ? '✓ Publié !' : 'Publier mon avis'}
                                 </Box>
@@ -294,7 +292,6 @@ export default function ProductPage() {
     )
 }
 
-// Arrow button style
 const arrowStyle = (side: 'left' | 'right') => ({
     position: 'absolute' as const,
     [side]: -20,
@@ -313,23 +310,22 @@ const arrowStyle = (side: 'left' | 'right') => ({
     '&:hover': { backgroundColor: '#f0f7f2' }
 })
 
-// Product card component
 function ProductCard({ product, onClick }: { product: Product, onClick: () => void }) {
     return (
         <Box onClick={onClick} sx={{ backgroundColor: '#fff', border: '1px solid #e8e8e8', borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s', '&:hover': { boxShadow: '0 4px 20px rgba(0,0,0,0.1)', transform: 'translateY(-2px)' } }}>
-            <Box sx={{ height: 140, backgroundColor: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px' }}>
+            <Box sx={{ height: 120, backgroundColor: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px' }}>
                 <img src={product.imageUrl} alt={product.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
             </Box>
-            <Box sx={{ padding: '12px' }}>
-                <Box sx={{ fontSize: '12px', fontWeight: 600, color: '#888', marginBottom: '4px' }}>{product.marque?.name || ''}</Box>
-                <Box sx={{ fontSize: '13px', fontWeight: 600, color: '#1a1a1a', marginBottom: '8px', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.name}</Box>
-                <Box sx={{ fontSize: '14px', fontWeight: 800, color: '#0F3D1F' }}>
+            <Box sx={{ padding: '10px' }}>
+                <Box sx={{ fontSize: '11px', fontWeight: 600, color: '#888', marginBottom: '4px' }}>{product.marque?.name || ''}</Box>
+                <Box sx={{ fontSize: '12px', fontWeight: 600, color: '#1a1a1a', marginBottom: '8px', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.name}</Box>
+                <Box sx={{ fontSize: '13px', fontWeight: 800, color: '#0F3D1F' }}>
                     {product.promoActive && product.pricePromo ? product.pricePromo.toLocaleString() : product.price.toLocaleString()} Fcfa
                 </Box>
                 {product.promoActive && product.pricePromo && (
                     <Box sx={{ fontSize: '11px', color: '#aaa', textDecoration: 'line-through' }}>{product.price.toLocaleString()} Fcfa</Box>
                 )}
-                <Box sx={{ marginTop: '10px', backgroundColor: '#0F3D1F', color: '#fff', padding: '7px', borderRadius: '8px', textAlign: 'center', fontSize: '12px', fontWeight: 700 }}>
+                <Box sx={{ marginTop: '8px', backgroundColor: '#0F3D1F', color: '#fff', padding: '6px', borderRadius: '8px', textAlign: 'center', fontSize: '11px', fontWeight: 700 }}>
                     Voir le produit
                 </Box>
             </Box>
