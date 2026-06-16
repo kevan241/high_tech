@@ -4,7 +4,6 @@ import { NextResponse } from "next/server"
 export default withAuth(
   function middleware(req) {
     const role = req.nextauth.token?.role
-
     if (!role || role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/login', req.url))
     }
