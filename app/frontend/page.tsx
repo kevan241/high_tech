@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
+import { Box } from "@mui/material"
 import Link from "next/link"
 import { useCart } from "./context/CartContext"
 
@@ -172,8 +173,8 @@ export default function FrontendHome() {
 
     return (
         <div style={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
-            {/* SEARCH BAR MOBILE - sous navbar */}
-<div style={{ display: 'none', padding: '10px 16px', backgroundColor: '#f0f0f0', gap: '8px', alignItems: 'center' }} className="mobile-search-bar">
+{/* Search bar mobile - sous navbar */}
+<div style={{ display: 'none', padding: '8px 16px', backgroundColor: '#f0f0f0', gap: '8px', alignItems: 'center', position: 'sticky', top: '56px', zIndex: 99 }} className="mobile-search-bar">
     <input
         type="text"
         placeholder="Rechercher votre produit..."
@@ -182,15 +183,17 @@ export default function FrontendHome() {
                 window.location.href = `/frontend/products?search=${(e.target as HTMLInputElement).value}`
             }
         }}
-        style={{ flex: 1, padding: '10px 16px', borderRadius: '8px 0 0 8px', border: 'none', fontSize: '13px', backgroundColor: '#fff', outline: 'none' }}
+        style={{ flex: 1, padding: '10px 16px', borderRadius: '8px 0 0 8px', border: 'none', fontSize: '13px', outline: 'none' }}
     />
-<button
-    onClick={() => setFiltersOpen(true)}
-    style={{ backgroundColor: '#168039', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '0 8px 8px 0', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap' }}
->
-    Catégories
-</button>
+    <button
+        onClick={() => setFiltersOpen(true)}
+        style={{ backgroundColor: '#168039', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '0 8px 8px 0', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap' }}
+    >
+        Catégories
+    </button>
 </div>
+
+{/* Nav links - desktop only */}
 
 
            {/* HERO */}
