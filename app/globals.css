@@ -197,6 +197,13 @@ body {
 
 @media (max-width: 768px) {
 
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 24px !important;
+  }
+
+
   .banners-grid::-webkit-scrollbar {
     display: none !important;
 }
@@ -278,5 +285,9 @@ body {
 @media (max-width: 414px) {
   .mobile-search-bar {
     display: flex !important;
+  }
+
+    .footer-grid {
+    grid-template-columns: 1fr !important;
   }
 }

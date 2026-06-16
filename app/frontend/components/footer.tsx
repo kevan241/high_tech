@@ -1,7 +1,14 @@
-export default function Footer() {
+   export default function Footer() {
     return (
-        <div style={{ backgroundColor: '#0F3D1F', padding: '50px 0px 20px 0px', justifyContent: 'space-around', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '90px', marginBottom: '40px' }}>
+        <div style={{ backgroundColor: '#0F3D1F', padding: '50px 24px 20px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '40px',
+                marginBottom: '40px',
+                width: '100%',
+                maxWidth: '1100px'
+            }} className="footer-grid">
                 <div>
                     <p style={{ color: '#fff', fontWeight: 'bold', fontSize: '14px', marginBottom: '16px' }}>A propos de High Tech 241</p>
                     {['Plan du site', 'Qui sommes nous ?', 'Nos nouveautés', 'Carrières', 'Publicité'].map(item => (
