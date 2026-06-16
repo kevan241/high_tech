@@ -89,7 +89,57 @@ body {
   .category-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
 }
 
+.mobile-search-bar input::placeholder {
+    color: #545454;
+}
+
+
+
 @media (max-width: 414px) {
+.banners-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    gap: 10px !important;
+    padding: 12px 16px !important;
+    border: none !important;
+    background: #0F3D1F !important;
+    scrollbar-width: none !important;
+}
+
+.banners-grid > div {
+    min-width: 180px !important;
+    height: 44px !important;
+    border-radius: 50px !important;
+    padding: 0 20px !important;
+    background-color: #168039 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+.banners-grid > div img {
+    display: none !important;
+}
+
+.banners-grid > div p {
+    font-size: 12px !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+}
+
+.banners-grid > div button {
+    display: none !important;
+}
+
+.banners-grid::-webkit-scrollbar {
+    display: none !important;
+}
+
+
   /* HERO */
   .hero-main { 
     height: 200px !important; 
@@ -146,6 +196,53 @@ body {
 }
 
 @media (max-width: 768px) {
+
+  .banners-grid::-webkit-scrollbar {
+    display: none !important;
+}
+
+.banners-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    gap: 10px !important;
+    padding: 12px 16px !important;
+    border: none !important;
+    background: #0F3D1F !important;
+    scrollbar-width: none !important;
+}
+
+.banners-grid > div {
+    min-width: 180px !important;
+    height: 44px !important;
+    border-radius: 50px !important;
+    padding: 0 20px !important;
+    background-color: #168039 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+.banners-grid > div img {
+    display: none !important;
+}
+
+.banners-grid > div p {
+    font-size: 12px !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+}
+
+.banners-grid > div button {
+    display: none !important;
+}
+
+
+
+
   .mobile-search-bar {
     display: flex !important;
   }
