@@ -1,7 +1,8 @@
 "use client"
 import { useEffect, useState, use } from 'react'
 import { useRouter } from 'next/navigation'
-import { Box, CircularProgress, Typography } from '@mui/material'
+import { Box, CircularProgress, Typography, Drawer, IconButton } from '@mui/material'
+import { Tune, Close } from '@mui/icons-material'
 import { useCart } from '../../context/CartContext'
 import Link from 'next/link'
 
@@ -20,6 +21,7 @@ export default function StorePageFront({ params }: { params: Promise<{ slug: str
     const [selectedMarques, setSelectedMarques] = useState<string[]>([])
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000])
     const [maxPrice, setMaxPrice] = useState(10000000)
+    const [filtersOpen, setFiltersOpen] = useState(false)
 
     useEffect(() => {
         Promise.all([
@@ -107,85 +109,117 @@ export default function StorePageFront({ params }: { params: Promise<{ slug: str
         ).some(p => p.marqueId === m.id)
     )
 
+    const FilterContent = () => (
+        <Box sx={{ backgroundColor: '#fff', borderRadius: '12px', padding: '20px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <p style={{ fontWeight: 'bold', color: '#0F3D1F', margin: 0, fontSize: '15px' }}>Filtres</p>
+                <button onClick={() => { setSelectedCategories([]); setSelectedMarques([]); setPriceRange([0, maxPrice]) }}
+                    style={{ backgroundColor: '#0F3D1F', color: '#fff', border: 'none', padding: '3px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>
+                    Réinitialiser
+                </button>
+            </Box>
+
+            {showFilters.includes('prix') && (
+                <Box sx={{ mb: 3, pb: 3, borderBottom: '1px solid #f0f0f0' }}>
+                    <p style={{ fontSize: '13px', fontWeight: 600, margin: '0 0 8px', color: '#333' }}>Prix</p>
+                    <input type="range" min={0} max={maxPrice} value={priceRange[1]}
+                        onChange={e => setPriceRange([0, parseInt(e.target.value)])}
+                        style={{ width: '100%', accentColor: '#0F3D1F' }} />
+                    <p style={{ fontSize: '11px', color: '#888', margin: '4px 0 0' }}>
+                        0 — {priceRange[1].toLocaleString()} Fcfa
+                    </p>
+                </Box>
+            )}
+
+            {showFilters.includes('categories') && availableCategories.length > 0 && (
+                <Box sx={{ mb: 3, pb: 3, borderBottom: '1px solid #f0f0f0' }}>
+                    <p style={{ fontSize: '13px', fontWeight: 600, margin: '0 0 8px', color: '#333' }}>Catégories</p>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {availableCategories.map((c: any) => (
+                            <label key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', color: '#444' }}>
+                                <input type="checkbox" checked={selectedCategories.includes(c.id)}
+                                    onChange={() => setSelectedCategories(prev => prev.includes(c.id) ? prev.filter(x => x !== c.id) : [...prev, c.id])}
+                                    style={{ accentColor: '#0F3D1F', width: '15px', height: '15px' }} />
+                                {c.name}
+                            </label>
+                        ))}
+                    </Box>
+                </Box>
+            )}
+
+            {showFilters.includes('marques') && availableMarques.length > 0 && (
+                <Box>
+                    <p style={{ fontSize: '13px', fontWeight: 600, margin: '0 0 8px', color: '#333' }}>Marques</p>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {availableMarques.map((m: any) => (
+                            <label key={m.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', color: '#444' }}>
+                                <input type="checkbox" checked={selectedMarques.includes(m.id)}
+                                    onChange={() => setSelectedMarques(prev => prev.includes(m.id) ? prev.filter(x => x !== m.id) : [...prev, m.id])}
+                                    style={{ accentColor: '#0F3D1F', width: '15px', height: '15px' }} />
+                                {m.name}
+                            </label>
+                        ))}
+                    </Box>
+                </Box>
+            )}
+        </Box>
+    )
+
+    const hasActiveFilters = selectedCategories.length + selectedMarques.length > 0
+
     return (
         <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
             {/* Header */}
-            <Box sx={{ background: 'linear-gradient(135deg, #0F3D1F 0%, #168039 100%)', color: '#fff', padding: '40px 60px' }}>
-                <Typography sx={{ fontSize: '28px', fontWeight: 800, lineHeight: 1.1 }}>{storePage.title}</Typography>
-                <Typography sx={{ fontSize: '14px', opacity: 0.8, mt: 0.5 }}>{displayed.length} produit(s)</Typography>
-            </Box>
-
-            <Box sx={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '24px', maxWidth: 1400, margin: '0 auto', padding: '32px 24px' }}>
-
-                {/* Sidebar filtres */}
-                <Box sx={{ backgroundColor: '#fff', borderRadius: '12px', padding: '20px', alignSelf: 'start', position: 'sticky', top: '90px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                        <p style={{ fontWeight: 'bold', color: '#0F3D1F', margin: 0, fontSize: '15px' }}>Filtres</p>
-                        <button onClick={() => { setSelectedCategories([]); setSelectedMarques([]); setPriceRange([0, maxPrice]) }}
-                            style={{ backgroundColor: '#0F3D1F', color: '#fff', border: 'none', padding: '3px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>
-                            Réinitialiser
-                        </button>
-                    </Box>
-
-                    {showFilters.includes('prix') && (
-                        <Box sx={{ mb: 3, pb: 3, borderBottom: '1px solid #f0f0f0' }}>
-                            <p style={{ fontSize: '13px', fontWeight: 600, margin: '0 0 8px', color: '#333' }}>Prix</p>
-                            <input type="range" min={0} max={maxPrice} value={priceRange[1]}
-                                onChange={e => setPriceRange([0, parseInt(e.target.value)])}
-                                style={{ width: '100%', accentColor: '#0F3D1F' }} />
-                            <p style={{ fontSize: '11px', color: '#888', margin: '4px 0 0' }}>
-                                0 — {priceRange[1].toLocaleString()} Fcfa
-                            </p>
-                        </Box>
-                    )}
-
-                    {showFilters.includes('categories') && availableCategories.length > 0 && (
-                        <Box sx={{ mb: 3, pb: 3, borderBottom: '1px solid #f0f0f0' }}>
-                            <p style={{ fontSize: '13px', fontWeight: 600, margin: '0 0 8px', color: '#333' }}>Catégories</p>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                {availableCategories.map((c: any) => (
-                                    <label key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', color: '#444' }}>
-                                        <input type="checkbox" checked={selectedCategories.includes(c.id)}
-                                            onChange={() => setSelectedCategories(prev => prev.includes(c.id) ? prev.filter(x => x !== c.id) : [...prev, c.id])}
-                                            style={{ accentColor: '#0F3D1F', width: '15px', height: '15px' }} />
-                                        {c.name}
-                                    </label>
-                                ))}
-                            </Box>
-                        </Box>
-                    )}
-
-                    {showFilters.includes('marques') && availableMarques.length > 0 && (
-                        <Box>
-                            <p style={{ fontSize: '13px', fontWeight: 600, margin: '0 0 8px', color: '#333' }}>Marques</p>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                {availableMarques.map((m: any) => (
-                                    <label key={m.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', color: '#444' }}>
-                                        <input type="checkbox" checked={selectedMarques.includes(m.id)}
-                                            onChange={() => setSelectedMarques(prev => prev.includes(m.id) ? prev.filter(x => x !== m.id) : [...prev, m.id])}
-                                            style={{ accentColor: '#0F3D1F', width: '15px', height: '15px' }} />
-                                        {m.name}
-                                    </label>
-                                ))}
-                            </Box>
-                        </Box>
-                    )}
+            <Box sx={{ background: 'linear-gradient(135deg, #0F3D1F 0%, #168039 100%)', color: '#fff', padding: { xs: '24px 16px', md: '40px 60px' }, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box>
+                    <Typography sx={{ fontSize: { xs: '20px', md: '28px' }, fontWeight: 800, lineHeight: 1.1 }}>{storePage.title}</Typography>
+                    <Typography sx={{ fontSize: '14px', opacity: 0.8, mt: 0.5 }}>{displayed.length} produit(s)</Typography>
                 </Box>
 
+                {/* Bouton filtres mobile */}
+                <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                    <IconButton onClick={() => setFiltersOpen(true)} sx={{ backgroundColor: 'rgba(255,255,255,0.2)', color: '#fff', borderRadius: '10px', position: 'relative' }}>
+                        <Tune />
+                        {hasActiveFilters && (
+                            <Box sx={{ position: 'absolute', top: 4, right: 4, width: 8, height: 8, borderRadius: '50%', backgroundColor: '#e53e3e' }} />
+                        )}
+                    </IconButton>
+                </Box>
+            </Box>
+
+            <Box sx={{ display: 'flex', gap: '24px', maxWidth: 1400, margin: '0 auto', padding: { xs: '16px', md: '32px 24px' } }}>
+
+                {/* Sidebar filtres - desktop */}
+                <Box sx={{ width: 240, flexShrink: 0, display: { xs: 'none', md: 'block' } }}>
+                    <Box sx={{ alignSelf: 'start', position: 'sticky', top: '90px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', borderRadius: '12px' }}>
+                        <FilterContent />
+                    </Box>
+                </Box>
+
+                {/* Drawer filtres - mobile */}
+                <Drawer anchor="left" open={filtersOpen} onClose={() => setFiltersOpen(false)}
+                    slotProps={{ paper: { sx: { width: 280, backgroundColor: '#f5f5f5' } } }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderBottom: '1px solid #eee', backgroundColor: '#fff' }}>
+                        <Typography sx={{ fontWeight: 700, fontSize: '14px' }}>Filtres</Typography>
+                        <IconButton onClick={() => setFiltersOpen(false)} size="small"><Close /></IconButton>
+                    </Box>
+                    <FilterContent />
+                </Drawer>
+
                 {/* Grille produits */}
-                <Box>
+                <Box sx={{ flex: 1, minWidth: 0 }}>
                     {displayed.length === 0 ? (
                         <Box sx={{ textAlign: 'center', color: '#aaa', fontSize: '14px', mt: 8 }}>
                             Aucun produit trouvé.
                         </Box>
                     ) : (
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(auto-fill, minmax(200px, 1fr))' }, gap: { xs: '10px', md: '16px' } }}>
                             {displayed.map(p => {
                                 const discount = p.promoActive && p.pricePromo ? Math.round((1 - p.pricePromo / p.price) * 100) : null
                                 return (
                                     <Box key={p.id} sx={{ backgroundColor: '#fff', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', transition: 'all 0.2s', '&:hover': { boxShadow: '0 6px 24px rgba(0,0,0,0.12)', transform: 'translateY(-3px)' } }}>
                                         <Box sx={{ position: 'relative' }}>
-                                            <Box sx={{ height: 160, backgroundColor: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px' }}>
+                                            <Box sx={{ height: { xs: 120, md: 160 }, backgroundColor: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px' }}>
                                                 <img src={p.imageUrl} alt={p.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                                             </Box>
                                             {discount && (
@@ -194,10 +228,10 @@ export default function StorePageFront({ params }: { params: Promise<{ slug: str
                                                 </Box>
                                             )}
                                         </Box>
-                                        <Box sx={{ padding: '12px' }}>
+                                        <Box sx={{ padding: { xs: '8px', md: '12px' } }}>
                                             <Box sx={{ fontSize: '11px', color: '#888', mb: 0.5 }}>{p.marque?.name || ''}</Box>
-                                            <Box sx={{ fontSize: '13px', fontWeight: 600, color: '#1a1a1a', mb: 1, lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.name}</Box>
-                                            <Box sx={{ fontSize: '15px', fontWeight: 800, color: '#0F3D1F', mb: 0.5 }}>
+                                            <Box sx={{ fontSize: { xs: '12px', md: '13px' }, fontWeight: 600, color: '#1a1a1a', mb: 1, lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.name}</Box>
+                                            <Box sx={{ fontSize: { xs: '13px', md: '15px' }, fontWeight: 800, color: '#0F3D1F', mb: 0.5 }}>
                                                 {(p.promoActive && p.pricePromo ? p.pricePromo : p.price).toLocaleString()} Fcfa
                                             </Box>
                                             {p.promoActive && p.pricePromo && (
