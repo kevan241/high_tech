@@ -71,6 +71,14 @@ body {
   .hero-side { display: flex !important; flex-direction: row !important; height: 160px !important; }
   .hero-side > div { padding: 16px !important; }
 
+
+    .hero-text {
+    max-width: 90% !important;
+  }
+  .hero-side-text {
+    max-width: 95% !important;
+  }
+
   /* BANNIÈRES */
   .banners-grid { grid-template-columns: 1fr !important; padding: 16px !important; gap: 10px !important; }
 

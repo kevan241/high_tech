@@ -205,8 +205,7 @@ export default function FrontendHome() {
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.63) 40%, rgba(0,0,0,0.3) 100%)' }} />
             </>
         )}
-        <div style={{ zIndex: 1, maxWidth: '50%' }}>
-            <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: 'bold', margin: '0 0 8px', lineHeight: 1.3 }}>{b(1)?.title || ''}</h2>
+<div className="hero-text" style={{ zIndex: 1, maxWidth: '50%' }}>            <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: 'bold', margin: '0 0 8px', lineHeight: 1.3 }}>{b(1)?.title || ''}</h2>
             <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '13px', margin: '0 0 20px' }}>{b(1)?.description || ''}</p>
             {b(1)?.buttonText && b(1)?.buttonLink && (
                 <Link href={b(1).buttonLink}>
@@ -226,8 +225,7 @@ export default function FrontendHome() {
                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.49) 35%, rgba(0,0,0,0.21) 100%)' }} />
                     </>
                 )}
-                <div style={{ zIndex: 1, maxWidth: '55%' }}>
-                    <h3 style={{ color: '#fff', fontSize: '16px', fontWeight: '600', margin: '0 0 6px', lineHeight: 1.3 }}>{b(slot)?.title || ''}</h3>
+<div className="hero-side-text" style={{ zIndex: 1, maxWidth: '55%' }}>                    <h3 style={{ color: '#fff', fontSize: '16px', fontWeight: '600', margin: '0 0 6px', lineHeight: 1.3 }}>{b(slot)?.title || ''}</h3>
                     <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', margin: '0 0 12px' }}>{b(slot)?.description || ''}</p>
                     {b(slot)?.buttonText && b(slot)?.buttonLink && (
                         <Link href={b(slot).buttonLink}>
